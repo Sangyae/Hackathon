@@ -1,0 +1,125 @@
+:root {
+    --bg-color: #0b0c10;
+    --panel-bg: #1f2833;
+    --accent-cyan: #66fcf1; 
+    --accent-blue: #45a29e;
+    --text-color: #c5c6c7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: radial-gradient(circle at center, #1a1a2e 0%, #0b0c10 100%);
+}
+
+.auth-container {
+    width: 90%;
+    max-width: 400px;
+    background: var(--panel-bg);
+    border: 2px solid var(--accent-cyan);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.2);
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+h2 { 
+    color: var(--accent-cyan); 
+    text-shadow: 0 0 10px var(--accent-cyan); 
+    letter-spacing: 2px; 
+    margin-bottom: 30px; 
+    font-size: 1.5rem;
+}
+
+.input-group { 
+    margin-bottom: 20px; 
+    text-align: left;
+}
+
+label {
+    display: block;
+    color: var(--accent-blue);
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+input[type="text"], input[type="password"], input[type="email"] { 
+    width: 100%; 
+    padding: 12px; 
+    background: #000; 
+    border: 1px solid var(--accent-blue); 
+    color: var(--accent-cyan); 
+    font-family: 'Orbitron', sans-serif; 
+    outline: none; 
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(102, 252, 241, 0.3);
+}
+
+button.submit-btn { 
+    width: 100%;
+    padding: 15px; 
+    background: var(--accent-cyan); 
+    color: #000; 
+    border: none; 
+    font-family: 'Orbitron', sans-serif; 
+    font-weight: bold; 
+    font-size: 1.1rem;
+    cursor: pointer; 
+    transition: 0.2s;
+    margin-top: 10px;
+}
+
+button.submit-btn:hover { 
+    background: #fff; 
+    box-shadow: 0 0 15px var(--accent-cyan); 
+}
+
+.toggle-link {
+    margin-top: 25px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.toggle-link span {
+    color: var(--accent-cyan);
+    cursor: pointer;
+    text-decoration: underline;
+    transition: 0.3s;
+}
+
+.toggle-link span:hover {
+    color: #fff;
+    text-shadow: 0 0 5px var(--accent-cyan);
+}
+
+/* Utility class to hide the inactive form */
+.hidden { display: none; }
+
+/* A cool scanline effect over the panel */
+.auth-container::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+}

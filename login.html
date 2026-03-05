@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Logger: System Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+    <div class="auth-container">
+        
+        <div id="login-panel">
+            <h2>SYSTEM LOGIN_</h2>
+            <div class="input-group">
+                <label>Player ID</label>
+                <input type="text" placeholder="Enter Username">
+            </div>
+            <div class="input-group">
+                <label>Passcode</label>
+                <input type="password" placeholder="Enter Password">
+            </div>
+            <button class="submit-btn" onclick="window.location.href='index.html'">INITIALIZE</button>
+            
+            <div class="toggle-link">
+                New Player? <span id="go-to-register">Create Account</span>
+            </div>
+        </div>
+
+        <div id="register-panel" class="hidden">
+            <h2>NEW PLAYER_</h2>
+            <div class="input-group">
+                <label>Player ID</label>
+                <input type="text" placeholder="Choose a Username">
+            </div>
+            <div class="input-group">
+                <label>Comms Link</label>
+                <input type="email" placeholder="Enter Email">
+            </div>
+            <div class="input-group">
+                <label>Passcode</label>
+                <input type="password" placeholder="Create Password">
+            </div>
+            <button class="submit-btn" onclick="window.location.href='index.html'">REGISTER</button>
+            
+            <div class="toggle-link">
+                Existing Player? <span id="go-to-login">Access System</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

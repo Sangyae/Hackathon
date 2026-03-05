@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Logger: Hero Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --panel-bg: #1f2833;
+            --accent-cyan: #66fcf1; 
+            --accent-blue: #45a29e;
+            --text-color: #c5c6c7;
+            --completed-color: #e02f6b; /* We'll use this pink/red for the logout button */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at center, #1a1a2e 0%, #0b0c10 100%);
+        }
+
+        .dashboard {
+            width: 90%;
+            max-width: 900px;
+            background: var(--panel-bg);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(102, 252, 241, 0.2);
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s;
+        }
+
+        .header {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 2px solid var(--accent-cyan);
+            text-align: center;
+            transition: border-color 0.3s;
+            position: relative; /* Added this so we can position the logout button inside it */
+        }
+
+        /* --- NEW: LOGOUT BUTTON STYLES --- */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background: transparent;
+            color: var(--completed-color);
+            border: 1px solid var(--completed-color);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: var(--completed-color);
+            color: #fff;
+            box-shadow: 0 0 10px var(--completed-color);
+        }
+        /* --------------------------------- */
+
+        h1 { color: var(--accent-cyan); text-shadow: 0 0 10px var(--accent-cyan); letter-spacing: 2px; transition: color 0.3s, text-shadow 0.3s; }
+        .stats { margin-top: 10px; font-size: 0.9rem; color: var(--accent-blue); }
+
+        .progress-bar-container { width: 100%; height: 10px; background: #000; border-radius: 5px; margin-top: 15px; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); transition: width 0.4s ease, background 0.3s, box-shadow 0.3s; }
+
+        .main-content { display: flex; flex-wrap: wrap; }
+        .quest-panel, .visual-panel { flex: 1; min-width: 300px; padding: 30px; }
+        .quest-panel { border-right: 2px dashed rgba(102, 252, 241, 0.2); }
+
+        h2 { font-size: 1.2rem; margin-bottom: 20px; color: var(--accent-blue); text-transform: uppercase; }
+
+        .input-group { display: flex; margin-bottom: 20px; }
+        input[type="text"] { flex: 1; padding: 12px; background: #000; border: 1px solid var(--accent-blue); color: var(--accent-cyan); font-family: 'Orbitron', sans-serif; outline: none; }
+        button.add-btn { padding: 12px 20px; background: var(--accent-cyan); color: #000; border: none; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; transition: 0.2s, background 0.3s; }
+        button.add-btn:hover { background: #fff; box-shadow: 0 0 15px var(--accent-cyan); }
+
+        ul { list-style: none; }
+        li { display: flex; align-items: center; padding: 12px; background: rgba(0,0,0,0.5); margin-bottom: 10px; border-left: 4px solid var(--accent-blue); transition: 0.3s; }
+        li.completed { opacity: 0.6; border-left-color: var(--completed-color); }
+        li.completed span { text-decoration: line-through; color: #888; }
+        input[type="checkbox"] { margin-right: 15px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--completed-color); }
+
+        .visual-panel { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+
+        .hero-container { width: 200px; height: 250px; position: relative; }
+
+        .part { position: absolute; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); animation: flashIn 0.5s ease-out forwards; transition: background 0.3s, box-shadow 0.3s, border-color 0.3s; }
+        .head { width: 40px; height: 40px; border-radius: 50%; left: 80px; top: 20px; background: transparent; border: 4px solid var(--accent-cyan); }
+        .torso { width: 6px; height: 70px; border-radius: 3px; left: 97px; top: 60px; }
+        .left-arm { width: 6px; height: 50px; border-radius: 3px; left: 97px; top: 70px; transform-origin: top center; transform: rotate(45deg); }
+        .right-arm { width: 6px; height: 50px; border-radius: 3px; left: 97px; top: 70px; transform-origin: top center; transform: rotate(-45deg); }
+        .left-leg { width: 6px; height: 60px; border-radius: 3px; left: 97px; top: 125px; transform-origin: top center; transform: rotate(35deg); }
+        .right-leg { width: 6px; height: 60px; border-radius: 3px; left: 97px; top: 125px; transform-origin: top center; transform: rotate(-35deg); }
+        
+        .aura { width: 120px; height: 200px; border-radius: 60px; left: 40px; top: 10px; background: transparent; box-shadow: 0 0 30px var(--accent-cyan); z-index: -1; animation: pulse 2s infinite alternate; }
+
+        .hidden { display: none !important; }
+        
+        #color-btn { margin-top: 20px; border-radius: 5px; animation: flashIn 0.5s; padding: 12px 20px; background: var(--accent-cyan); color: #000; border: none; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        #color-btn:hover { background: #fff; box-shadow: 0 0 15px var(--accent-cyan); }
+
+        @keyframes flashIn { 0% { opacity: 0; filter: brightness(2); } 100% { opacity: 1; filter: brightness(1); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 20px var(--accent-cyan); } 100% { box-shadow: 0 0 50px var(--accent-cyan); } }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header class="header">
+            <button class="logout-btn" onclick="window.location.href='welcome.html'">LOGOUT</button>
+            
+            <h1>QUEST LOGGER_</h1>
+            <div class="stats">Level: <span id="level-display">0</span> | EXP: <span id="exp-display">0%</span></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="quest-panel">
+                <h2>Daily Quests</h2>
+                <div class="input-group">
+                    <input type="text" id="new-quest" placeholder="Enter a new quest...">
+                    <button class="add-btn" id="add-btn">ADD</button>
+                </div>
+                <ul id="quest-list"></ul>
+            </section>
+
+            <section class="visual-panel">
+                <h2>Your Hero</h2>
+                <div class="hero-container" id="hero-container"></div>
+                
+                <button id="color-btn" class="hidden">CHANGE SKIN</button>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const questInput = document.getElementById('new-quest');
+        const addBtn = document.getElementById('add-btn');
+        const questList = document.getElementById('quest-list');
+        const heroContainer = document.getElementById('hero-container');
+        const progressBar = document.getElementById('progress-bar');
+        const expDisplay = document.getElementById('exp-display');
+        const levelDisplay = document.getElementById('level-display');
+        const colorBtn = document.getElementById('color-btn'); 
+
+        let quests = [];
+        
+        const skins = ['#66fcf1', '#39ff14', '#ff00ff', '#ffd700', '#ff073a'];
+        let currentSkinIndex = 0;
+
+        function changeSkin() {
+            currentSkinIndex++;
+            if (currentSkinIndex >= skins.length) currentSkinIndex = 0; 
+            document.documentElement.style.setProperty('--accent-cyan', skins[currentSkinIndex]);
+        }
+
+        function addQuest() {
+            const text = questInput.value.trim();
+            if (!text) return;
+            quests.push({ id: Date.now(), text: text, completed: false });
+            questInput.value = ''; 
+            updateDashboard(); 
+        }
+
+        function toggleQuest(id) {
+            const quest = quests.find(q => q.id === id);
+            if (quest) {
+                quest.completed = !quest.completed;
+                updateDashboard(); 
+            }
+        }
+
+        function updateDashboard() {
+            questList.innerHTML = '';
+            let completedCount = 0;
+
+            quests.forEach(quest => {
+                if (quest.completed) completedCount++;
+
+                const li = document.createElement('li');
+                if (quest.completed) li.className = 'completed';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = quest.completed;
+                checkbox.onchange = () => toggleQuest(quest.id);
+
+                const span = document.createElement('span');
+                span.textContent = quest.text;
+
+                li.appendChild(checkbox);
+                li.appendChild(span);
+                questList.appendChild(li);
+            });
+
+            const total = quests.length;
+            const progress = total === 0 ? 0 : Math.round((completedCount / total) * 100);
+            progressBar.style.width = `${progress}%`;
+            expDisplay.textContent = `${progress}%`;
+            levelDisplay.textContent = completedCount;
+
+            heroContainer.innerHTML = ''; 
+
+            const bodyPartsOrder = ['head', 'torso', 'left-arm', 'right-arm', 'left-leg', 'right-leg', 'aura'];
+
+            const percentDone = total === 0 ? 0 : (completedCount / total);
+            const partsToShow = Math.floor(percentDone * bodyPartsOrder.length);
+
+            for (let i = 0; i < partsToShow; i++) {
+                const partDiv = document.createElement('div');
+                partDiv.className = `part ${bodyPartsOrder[i]}`;
+                heroContainer.appendChild(partDiv);
+            }
+
+            if (total > 0 && completedCount === total) {
+                colorBtn.classList.remove('hidden');
+            } else {
+                colorBtn.classList.add('hidden');
+            }
+        }
+
+        addBtn.addEventListener('click', addQuest);
+        questInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addQuest();
+        });
+        
+        colorBtn.addEventListener('click', changeSkin);
+
+        updateDashboard();
+    </script>
+</body>
+</html>
